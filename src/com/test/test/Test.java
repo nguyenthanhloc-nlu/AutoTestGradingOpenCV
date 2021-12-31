@@ -3,13 +3,14 @@ package com.test.test;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.imgcodecs.Imgcodecs;
 
-import com.test.model.Paper;
 import com.test.grading.GetBiggestFrame;
-import com.test.grading.GetAnswers;
 import com.test.model.Line;
+import com.test.model.Paper;
+import com.test.process.Plantain_StudentID;
 
 public class Test {
 
@@ -57,9 +58,9 @@ public class Test {
 	}
 
 	public static void main(String[] args) {
-
-		Test test = new Test();
-		test.RunMutiple(20);
+//
+//		Test test = new Test();
+//		test.RunMutiple(20);
 
 //		String filePath = "src/dapan4.jpg";
 //
@@ -68,6 +69,29 @@ public class Test {
 //		Map<Integer, Line> ok = getAns.getAnswers(src);
 //
 //		print(ok);
+		// test mã đề và MSSV
+		String s1 = "/src/img/stuID-cam1.jpg";
+		String s2 = "/src/img/plan-cam1.jpg";
+		String s3 = "./src/img/stuID-cam.jpg";
+		String s4 = "./src/img/plan-cam.jpg";
+		String s5 = "./src/img/stuID-cam2.jpg";
+		String s6 = "./src/img/plan-cam2.jpg";
+		String s7 = "./src/img/stuID-cam3.jpg";
+		String s8 = "./src/img/plan-cam3.jpg";
+		String s9 = "./src/img/rs-ma-so-sv-1.jpg";
+		String s10 = "./src/img/rs-ma-de-4.jpg";
+		Plantain_StudentID oStu = new Plantain_StudentID(s5, true);
+//		Imgcodecs.imwrite("./src/img/grayStu.jpg", oStu.imgGray());
+//		Imgcodecs.imwrite("./src/img/thresholdStu.jpg", oStu.threshold());
+//		Imgcodecs.imwrite("./src/img/stuID.jpg", oStu.imgPlan_StuID(oStu.threshold()));
+		System.out.println("MSSV : " + oStu.code());
+		// 10,14,19,27,3,32,35,38,5,8
+		Plantain_StudentID oPlan = new Plantain_StudentID(s6, false);
+//		Imgcodecs.imwrite("./src/img/grayPlan.jpg", oPlan.imgGray());
+//		Imgcodecs.imwrite("./src/img/thresholdPlan.jpg", oPlan.threshold());
+//		Imgcodecs.imwrite("./src/img/plantain.jpg", oPlan.imgPlan_StuID(oPlan.threshold()));
+		System.out.println("Mã Đề : " + oPlan.code());
+		// 5,3,8,10,14,19,23,27,32,34,35,37,38
 
 	}
 
