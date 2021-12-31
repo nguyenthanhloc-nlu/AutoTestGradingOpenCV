@@ -22,7 +22,6 @@ import com.test.process.MatProcess;
 import com.test.process.RectCompareNoise;
 import com.test.process.SortMatOfPoint;
 
-
 public class GetAnswers {
 	public static final int W_SQUARE_MAX = 30;
 	public static final int H_SQUARE_MAX = 30;
@@ -44,24 +43,22 @@ public class GetAnswers {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 	}
 
-
-
 	/*
-	 * 6 ô vuông định vị đáp án
+	 * 6 Ă´ vuĂ´ng Ä‘á»‹nh vá»‹ Ä‘Ă¡p Ă¡n
 	 */
 	public Set<Rect> getPositionAnsewer(Mat src) {
-		// lấy contour
-		// lấy vị trí 6 ô vuông
+		// láº¥y contour
+		// láº¥y vá»‹ trĂ­ 6 Ă´ vuĂ´ng
 		Mat gray = MatProcess.toColorGray(src);
 		Mat thresh = MatProcess.toThreshBinary(gray, 100);
 		List<MatOfPoint> contours = MatProcess.getContour(thresh);
 
-		// lọc phần tử gây nhiễu
+		// lá»�c pháº§n tá»­ gĂ¢y nhiá»…u
 		Set<Rect> rects = new TreeSet<Rect>(RectCompareNoise.RECT_COMPARE);
 
 		// 80, 670
-		// xác định 6 tọa độ 6 ô đen, lấy cột đán án
-		// ctdl Set không chứa phần tử trùng, dùng để remove nhiễu
+		// xĂ¡c Ä‘á»‹nh 6 tá»�a Ä‘á»™ 6 Ă´ Ä‘en, láº¥y cá»™t Ä‘Ă¡n Ă¡n
+		// ctdl Set khĂ´ng chá»©a pháº§n tá»­ trĂ¹ng, dĂ¹ng Ä‘á»ƒ remove nhiá»…u
 
 		for (int i = 0; i < contours.size(); i++) {
 			Rect rect = Imgproc.boundingRect(contours.get(i));
@@ -125,7 +122,7 @@ public class GetAnswers {
 
 	}
 
-	//// 1 ô 22*22
+	//// 1 Ă´ 22*22
 	// line 18
 	public Map<Integer, Line> getRowAnswer(Mat colAnswer, int start) {
 		Map<Integer, Line> result = new HashMap<Integer, Line>();
@@ -136,10 +133,10 @@ public class GetAnswers {
 
 		List<MatOfPoint> contours = MatProcess.getContour(thresh);
 		Imgcodecs.imwrite("result_test4.jpg", thresh);
-		// remove contour có area() < 250
+		// remove contour cĂ³ area() < 250
 		removeContourHasAreaLess_N(contours, 250);
 
-		// sort theo y, duyệt từ trên xuống
+		// sort theo y, duyá»‡t tá»« trĂªn xuá»‘ng
 		Collections.sort(contours, SortMatOfPoint.MAT_OF_POINT_COMPARE_BY_Y);
 
 		if (contours.isEmpty())
@@ -150,13 +147,13 @@ public class GetAnswers {
 
 		while (lineCurrent < 17 && contours.size() > 0) {
 			lineCurrent++;
-			// lấy ra contour có y min là ô đáp án tiếp theo
+			// láº¥y ra contour cĂ³ y min lĂ  Ă´ Ä‘Ă¡p Ă¡n tiáº¿p theo
 			Rect min = Imgproc.boundingRect(contours.get(0));
 
-			// những dòng khoanh lớn hơn 2 ô, bỏ qua
+			// nhá»¯ng dĂ²ng khoanh lá»›n hÆ¡n 2 Ă´, bá»� qua
 			boolean check = rowHasTwoAnswer(contours, min);
 
-			// remove nhiễu theo y, lấy sai số 21 - height of bounding answer
+			// remove nhiá»…u theo y, láº¥y sai sá»‘ 21 - height of bounding answer
 			removeNoiseAroundAnswer(contours, min.y);
 			if (check)
 				continue;
@@ -178,7 +175,7 @@ public class GetAnswers {
 	public void removeNoiseAroundAnswer(List<MatOfPoint> contours, int y) {
 		for (int i = 0; i < contours.size(); i++) {
 			Rect rect = Imgproc.boundingRect(contours.get(i));
-			if (Math.abs(y - rect.y) < 21)// +21 sai số
+			if (Math.abs(y - rect.y) < 21)// +21 sai sá»‘
 				contours.remove(i--);
 		}
 	}
@@ -186,7 +183,7 @@ public class GetAnswers {
 	public boolean rowHasTwoAnswer(List<MatOfPoint> contours, Rect answer) {
 		for (int i = 1; i < contours.size(); i++) {
 			Rect rect = Imgproc.boundingRect(contours.get(i));
-			if (Math.abs(answer.x - rect.x) > 21 && Math.abs(answer.y - rect.y) < 21) { // +21 sai số
+			if (Math.abs(answer.x - rect.x) > 21 && Math.abs(answer.y - rect.y) < 21) { // +21 sai sá»‘
 				return true;
 			}
 		}
@@ -205,9 +202,9 @@ public class GetAnswers {
 
 	public void addAnswer(Map<Integer, Line> output, int line, Rect rectAns) {
 		int x = rectAns.x;
-		// 21 là ô
-		// khoảng cách ô
-		for (int i = 3; i >=0; i--) {
+		// 21 lĂ  Ă´
+		// khoáº£ng cĂ¡ch Ă´
+		for (int i = 3; i >= 0; i--) {
 			if (21 + SPACE_ANSWER * (i - 1) + W_ANSWER * i < x) {
 				output.put(line, new Line(line, converNumToTextAns(i)));
 				break;
@@ -217,7 +214,6 @@ public class GetAnswers {
 
 	public Map<Integer, Line> getAnswers(Mat src) {
 
-
 		Mat table2 = new Mat();
 		Imgproc.resize(src, table2, new Size(800, 800));
 
@@ -226,7 +222,7 @@ public class GetAnswers {
 		Mat col3 = new Mat();
 		getColumnAnswer(table2, col1, col2, col3);
 		Imgcodecs.imwrite("result_test3.jpg", table2);
-		
+
 		Map<Integer, Line> result = new HashMap<Integer, Line>();
 		result.putAll(getRowAnswer(col1, 0));
 		result.putAll(getRowAnswer(col2, 17));
