@@ -13,7 +13,7 @@ import com.test.model.Line;
 public class Test {
 	public static void main(String[] args) {
 
-		String filePath = "src/dapan4.jpg";
+		String filePath = "src/dapan3.jpg";
 
 		GetAnswers getAns = new GetAnswers();
 		Mat src = Imgcodecs.imread(filePath);

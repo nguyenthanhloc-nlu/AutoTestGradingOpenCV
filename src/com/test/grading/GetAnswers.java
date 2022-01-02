@@ -208,7 +208,7 @@ public class GetAnswers {
 		// 21 là ô
 		// khoảng cách ô
 		for (int i = 3; i >=0; i--) {
-			if (21 + SPACE_ANSWER * (i - 1) + W_ANSWER * i < x) {
+			if (MARGIN + SPACE_ANSWER * (i - 1) + W_ANSWER * i < x) {
 				output.put(line, new Line(line, converNumToTextAns(i)));
 				break;
 			}
