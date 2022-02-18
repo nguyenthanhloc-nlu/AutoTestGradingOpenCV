@@ -126,19 +126,12 @@ public class MatProcess {
 	}
 
 	public static Mat reSize(Mat mat, int w, int h) {
-
-//		System.out.println("MatProcess: reSize");
-
 		Mat destMat = new Mat();
 		Imgproc.resize(mat, destMat, new Size(w, h), 0, 0, Imgproc.INTER_AREA);
 		return destMat;
 	}
-
 	// images gray
 	public static Mat imgGray(Mat matPathImg) {
-
-//		System.out.println("MatProcess: imgGray");
-
 		Mat dstImg = new Mat();
 		Imgproc.cvtColor(matPathImg, dstImg, Imgproc.COLOR_BGR2GRAY);
 		Mat dstGray = new Mat(dstImg.rows(), dstImg.cols(), dstImg.type());
@@ -147,14 +140,11 @@ public class MatProcess {
 	}
 
 	// threshold resize
-	public static Mat threshold(Mat matPathImg, int wBoxPlan_StuID, int hBoxP_StuID) {
-
-//		System.out.println("MatProcess: threshold");
-
+	public static Mat threshold(Mat matPathImg,int wBoxPlan_StuID,int hBoxP_StuID ) {
 		Mat imgGrayResize = reSize(imgGray(matPathImg), wBoxPlan_StuID, hBoxP_StuID);
 		Mat dstThres = new Mat(imgGrayResize.rows(), imgGrayResize.cols(), imgGrayResize.type(), new Scalar(0));
 		Imgproc.adaptiveThreshold(imgGrayResize, dstThres, 255, Imgproc.ADAPTIVE_THRESH_GAUSSIAN_C,
-				Imgproc.THRESH_BINARY_INV, 31, 11);
+				Imgproc.THRESH_BINARY_INV, 31, 30);
 		return dstThres;
 	}
 }
