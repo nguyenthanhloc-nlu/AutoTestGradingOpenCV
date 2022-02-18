@@ -5,6 +5,7 @@ import org.opencv.core.Mat;
 import org.opencv.core.Rect;
 import org.opencv.imgcodecs.Imgcodecs;
 import com.test.model.Paper;
+import com.test.model.PositionAndThreshValue;
 
 public class GetFrame {
 
@@ -17,48 +18,30 @@ public class GetFrame {
 	public void execute(Mat src, Mat idExam, Mat idStudent, Mat resultExam) {
 
 		final long startTime = System.currentTimeMillis();
-		System.err.println("\nGetFrame: execute");
+		System.out.println("\nGetFrame: execute");
 
-		executeIdExamAndStudent(src, idExam, idStudent);
+		PositionAndThreshValue positionAndThreshValue = paper.getPositionPaperAndThreshValue(src);
 
-		executeResult(src, resultExam);
+		Mat getFrameRomatedBeforeCrop = paper.getFrameRomatedBeforeCrop(positionAndThreshValue.getListRect(), src);
 
-//		final long startTime = System.currentTimeMillis();
+		List<Rect> getPositionPaperAfterRomomate = paper.getPositionPaperAfterRomomate(getFrameRomatedBeforeCrop,
+				positionAndThreshValue);
+
+		Mat frameRomatedAfterCrop = paper.getFrameRomatedAfterCrop(getPositionPaperAfterRomomate,
+				getFrameRomatedBeforeCrop);
+		Imgcodecs.imwrite("src/img/frameRomatedAfterCrop.jpg", frameRomatedAfterCrop);
+
+		getResltExamFrame.getAnswerFrame(frameRomatedAfterCrop).copyTo(resultExam);
+		Imgcodecs.imwrite("src/img/rs-dap-an.jpg", resultExam);
+
+		getIdStudentFrame.getIDStudentFrame(frameRomatedAfterCrop).copyTo(idStudent);
+		Imgcodecs.imwrite("src/img/rs-ma-so-sv.jpg", idStudent);
+
+		getIdExamFrame.getIDExameFrame(frameRomatedAfterCrop).copyTo(idExam);
+		Imgcodecs.imwrite("src/img/rs-rs-ma-de.jpg", idExam);
+
 		final long endTime = System.currentTimeMillis();
 		System.err.println("Time execute: " + (endTime - startTime));
 	}
 
-	public void executeIdExamAndStudent(Mat src, Mat idExam, Mat idStudent) {
-		final long startTime = System.currentTimeMillis();
-		System.err.println("\nGetFrame: executeIdExam");
-
-		Mat get_Area = paper.getRectIn4RectForId(src);
-		Imgcodecs.imwrite("src/img/a-rect-in-4-rect-id-exam-n-student.jpg", get_Area);
-
-		getIdExamFrame.getIDExameFrame(get_Area).copyTo(idExam);
-		Imgcodecs.imwrite("src/img/rs-ma-de.jpg", idExam);
-
-		getIdStudentFrame.getIDStudentFrame(get_Area).copyTo(idStudent);
-		Imgcodecs.imwrite("src/img/rs-mssv.jpg", idStudent);
-
-		final long endTime = System.currentTimeMillis();
-		System.err.println("Time executeIdExamAndStudent: " + (endTime - startTime));
-	}
-
-	public void executeResult(Mat src, Mat resultExam) {
-		final long startTime = System.currentTimeMillis();
-		System.err.println("\nGetFrame: executeResult");
-
-		List<Rect> listRect = paper.getPositionPaperForId_Exam(src);
-		Mat get_Area = paper.getRectIn4RectForResult(listRect, src);
-
-		Imgcodecs.imwrite("src/img/a-rect-in-4-rect-result.jpg", get_Area);
-
-		getResltExamFrame.getAnswerFrame(get_Area).copyTo(resultExam);
-		Imgcodecs.imwrite("src/img/rs-dap-an.jpg", resultExam);
-
-		final long endTime = System.currentTimeMillis();
-		System.err.println("Time executeResult: " + (endTime - startTime));
-
-	}
 }
