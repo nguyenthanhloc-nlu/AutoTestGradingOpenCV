@@ -1,7 +1,9 @@
 package com.test.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -38,51 +40,7 @@ public class Paper {
 		return result;
 	}
 
-//	public List<Rect> getPositionPaper(Mat src) {
-//
-//		System.out.println("Paper: getPositionPaper");
-//
-//		List<Rect> result = new ArrayList<Rect>();
-//
-//		Mat newSize = new Mat();
-//		Imgproc.resize(src, newSize, new Size(src.width() / 2, src.height() / 2));
-//		totalArea = newSize.width() * newSize.height();
-//
-//		Mat gray = MatProcess.toColorGray(newSize);
-//		Mat thresh_image = MatProcess.toThreshBinary(gray, 110);
-//
-//		List<MatOfPoint> contours = MatProcess.getContour(thresh_image);
-//
-//		Set<Rect> rects = new TreeSet<Rect>(RectCompareNoise.RECT_COMPARE);
-//
-//		for (int i = 0; i < contours.size(); i++) {
-//			Rect rect = Imgproc.boundingRect(contours.get(i));
-//
-//			if (rect.area() > 600 && rect.area() < 1500 && Math
-//					.abs(rect.width - rect.height) < ((rect.width > rect.height) ? rect.width / 2 : rect.height / 2)) {
-//
-//				MatOfPoint src2 = contours.get(i);
-//
-//				MatOfPoint2f dst = new MatOfPoint2f();
-//				src2.convertTo(dst, CvType.CV_32F);
-//				double peri = Imgproc.arcLength(dst, true);
-//				MatOfPoint2f approxCurve = new MatOfPoint2f();
-//				Imgproc.approxPolyDP(dst, approxCurve, peri * 0.05, true);
-//
-//				if (approxCurve.toArray().length == 4)
-//
-//					rects.add(rect);
-//			}
-//		}
-//
-//		result = filterRects(rects);
-//		return result;
-//	}
-
-	public List<Rect> getPositionPaperForId_Exam(Mat src) {
-
-		System.out.println("Paper: getPositionPaperForId_Exam");
-
+	public PositionAndThreshValue getPositionPaperAndThreshValue(Mat src) {
 		List<Rect> result = new ArrayList<Rect>();
 
 		Mat newSize = new Mat();
@@ -92,11 +50,12 @@ public class Paper {
 		Mat gray = MatProcess.toColorGray(newSize);
 
 		Set<Rect> rects = new TreeSet<Rect>(RectCompareNoise.RECT_COMPARE);
-
+		int theshIs = 0;
 		for (int thresh_ = 135; thresh_ > 100; thresh_ -= 0.5) {
+
 			rects.clear();
 			Mat thresh_image = MatProcess.toThreshBinary(gray, thresh_);
-			Imgcodecs.imwrite("src/img/paper2-thresh_image.jpg", thresh_image);
+//			Imgcodecs.imwrite("src/img/getPositionPaper-thresh_image.jpg", thresh_image);
 			List<MatOfPoint> contours = MatProcess.getContour(thresh_image);
 
 			for (int i = 0; i < contours.size(); i++) {
@@ -109,8 +68,45 @@ public class Paper {
 				}
 			}
 			result = filterForId_Exam(rects);
+			theshIs = thresh_;
 		}
-		System.out.println(result);
+//		System.out.println("getPositionPaper: Final thresh " + theshIs);
+//		System.out.println(result);
+
+		PositionAndThreshValue positionAndThreshValue = new PositionAndThreshValue(result, theshIs);
+		return positionAndThreshValue;
+	}
+
+	public List<Rect> getPositionPaperAfterRomomate(Mat src, PositionAndThreshValue positionThreshValue) {
+
+		List<Rect> result = new ArrayList<Rect>();
+
+//		Mat newSize = new Mat();
+//		Imgproc.resize(src, newSize, new Size(src.width() / 2, src.height() / 2));
+		totalArea = src.width() * src.height();
+
+		Mat gray = MatProcess.toColorGray(src);
+
+		Set<Rect> rects = new TreeSet<Rect>(RectCompareNoise.RECT_COMPARE);
+
+		int theshIss = positionThreshValue.getThreshValue();
+
+//		System.out.println("positionThreshValue.getThreshValue(): " + theshIss);
+
+		Mat thresh_image = MatProcess.toThreshBinary(gray, theshIss);
+//		Imgcodecs.imwrite("src/img/getPositionPaperAfterRomomate-thresh_image.jpg", thresh_image);
+		List<MatOfPoint> contours = MatProcess.getContour(thresh_image);
+
+		for (int i = 0; i < contours.size(); i++) {
+			Rect rect = Imgproc.boundingRect(contours.get(i));
+
+			if ((rect.width > 18 || rect.width < 35) && (rect.height > 18 || rect.height < 35)
+					&& rect.area() > (18 * 18) && rect.area() < (35 * 35) && Math.abs(rect.width - rect.height) < 5) {
+				rects.add(rect);
+			}
+		}
+		result = filterForId_Exam(rects);
+//		System.out.println("getPositionPaperAfterRomomate " + result);
 		return result;
 	}
 
@@ -194,11 +190,66 @@ public class Paper {
 		}
 	}
 
-	public Mat getRectIn4RectForResult(List<Rect> listRect, Mat src) {
+	public Mat getFrameRomatedBeforeCrop(List<Rect> listRect, Mat src) {
+
+		Mat m = new Mat();
+		Imgproc.resize(src, m, new Size(src.width() / 2, src.height() / 2));
+
+//		Imgcodecs.imwrite("src/img/getFrameRomatedBeforeCrop-resize.jpg", m);
+
+		totalArea = src.width() / 2 * src.height() / 2;
+
+		for (int i = 0; i < listRect.size(); i++) {
+			Imgproc.rectangle(m, listRect.get(i), new Scalar(0, 255, 0));
+		}
+
+//		System.out.println("getFrameRomatedBeforeCrop listRect: " + listRect);
+
+		double angle = MatProcess.computeAngleRotate(new Point(listRect.get(0).x, listRect.get(0).y),
+				new Point(listRect.get(1).x, listRect.get(1).y), new Point(listRect.get(2).x, listRect.get(2).y));
+
+		Mat table = MatProcess.rotate(m, angle);
+//		Imgcodecs.imwrite("src/img/getFrameRomatedBeforeCrop-romated.jpg", table);
+		return table;
+	}
+
+	public Mat getFrameRomatedAfterCrop(List<Rect> listRect, Mat src) {
+
+		Mat m = new Mat();
+		Imgproc.resize(src, m, new Size(src.width() / 2, src.height() / 2));
+
+		totalArea = src.width() / 2 * src.height() / 2;
+
+		int xTopLeft = listRect.get(0).x;
+		int yTopLeft = listRect.get(0).y;
+
+		int xTopRight = listRect.get(2).x;
+
+		int yBottomLeft = listRect.get(1).y;
+
+		int wAfterRomate = (int) ((xTopRight - xTopLeft));
+		int hAfterRomate = (int) ((yBottomLeft - yTopLeft));
+
+//		Imgcodecs.imwrite("src/img/getFrameRomatedAfterCrop-mmm.jpg", m);
+
+//		System.out.println("xTopLeft: " + xTopLeft);
+//		System.out.println("yTopLeft: " + yTopLeft);
+//		System.out.println("wAfterRomate: " + wAfterRomate);
+//		System.out.println("hAfterRomate: " + hAfterRomate);
+
+		Mat drop_Mat = new Mat(m, new Rect(xTopLeft / 2, yTopLeft / 2, wAfterRomate / 2, (hAfterRomate / 2) + 20));
+
+//		Imgcodecs.imwrite("src/img/paper-getFrameRomatedAfterCrop-drop-matbefore-.jpg", m);
+//		Imgcodecs.imwrite("src/img/paper-getFrameRomatedAfterCrop-drop-mat.jpg", drop_Mat);
+
+		return drop_Mat;
+	}
+
+	public Mat getRectIn4Rect(List<Rect> listRect, Mat src) {
 
 		final long startTime = System.currentTimeMillis();
 
-		System.out.println("Paper: getRectIn4RectForResult2");
+		System.out.println("Paper: getRectIn4RectForResult");
 
 		Mat m = new Mat();
 		Imgproc.resize(src, m, new Size(src.width() / 2, src.height() / 2));
