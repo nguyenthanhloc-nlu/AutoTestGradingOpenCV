@@ -155,7 +155,7 @@ public class MatProcess {
 		Mat imgGrayResize = reSize(imgGray(matPathImg), wBoxPlan_StuID, hBoxP_StuID);
 		Mat dstThres = new Mat(imgGrayResize.rows(), imgGrayResize.cols(), imgGrayResize.type(), new Scalar(0));
 		Imgproc.adaptiveThreshold(imgGrayResize, dstThres, 255, Imgproc.ADAPTIVE_THRESH_GAUSSIAN_C,
-				Imgproc.THRESH_BINARY_INV, 31, 30);
+				Imgproc.THRESH_BINARY_INV, 31, 18);
 		return dstThres;
 	}
 }
