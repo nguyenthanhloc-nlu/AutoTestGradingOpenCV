@@ -99,9 +99,9 @@ public class MatProcess {
 		double cosa = a / (b * c);
 		double angle = Math.acos(cosa);
 		if (p1.x - p2.x > 0)
-			return Math.toDegrees(angle);
+			return Math.toDegrees(angle)/2;
 
-		return -Math.toDegrees(angle);
+		return -Math.toDegrees(angle)/2;
 
 	}
 
