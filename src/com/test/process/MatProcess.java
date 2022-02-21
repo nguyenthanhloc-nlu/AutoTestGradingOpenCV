@@ -74,6 +74,17 @@ public class MatProcess {
 		Imgproc.warpAffine(src, dst, rotate, new Size(width, height));
 		return dst;
 	}
+	
+	public static Mat rotate(Mat src, double angle, int x, int y) {
+
+//		System.out.println("MatProcess: rotate");
+		int width = src.width();
+		int height = src.height();
+		Mat rotate = Imgproc.getRotationMatrix2D(new Point(x, y), angle, 1);
+		Mat dst = new Mat();
+		Imgproc.warpAffine(src, dst, rotate, new Size(width, height));
+		return dst;
+	}
 
 	public static double computeAngleRotate(Point p1, Point p2, Point p3) {
 
@@ -109,9 +120,9 @@ public class MatProcess {
 		}
 
 		if (p1.x - p2.x > 0)
-			return Math.toDegrees(angle);
+			return Math.toDegrees(angle)/2;
 
-		return -Math.toDegrees(angle);
+		return -Math.toDegrees(angle)/2;
 	}
 
 	public static Point pointAfterRotate(Point oldPoint, double angle, Point central) {
