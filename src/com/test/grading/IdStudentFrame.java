@@ -7,9 +7,9 @@ import org.opencv.imgcodecs.Imgcodecs;
 public class IdStudentFrame {
 
 	public static final double X_ID_STUDENT_PERCENT = 0.55;
-	public static final double Y_ID_STUDENT_PERCENT = 0.005;
+	public static final double Y_ID_STUDENT_PERCENT = 0.0043;
 	public static final double W_ID_STUDENT_PERCENT = 0.27;
-	public static final double H_ID_STUDENT_PERCENT = 0.29;
+	public static final double H_ID_STUDENT_PERCENT = 0.285;
 
 	public Mat getIDStudentFrame(Mat start) {
 		int x = (int) (X_ID_STUDENT_PERCENT * start.cols());
