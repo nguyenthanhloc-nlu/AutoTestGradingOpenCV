@@ -68,17 +68,17 @@ public class Plantain_StudentID {
 		Set<Rect> rectTree = new TreeSet<Rect>(RectCompareNoise.RECT_COMPARE);
 		for (int i = 0; i < contours.size(); i++) {
 			Rect rect = Imgproc.boundingRect(contours.get(i));
-//			System.err.println(rect);
-			if (rect.area() > 140 && rect.area() < 600) {
-				if (((rect.y > -1 && rect.y < 60) || (rect.y > 270 && rect.y < hBoxP_StuID))
-						&& (rect.x > -1 && rect.x <= 48) && (rect.width > 11 && rect.width < 26)
-						&& (rect.height > 10 && rect.height < 26)) {
+			System.err.println(rect);
+			if (rect.area() > 139 && rect.area() < 600) {
+				if (((rect.y > -1 && rect.y < 60) || (rect.y > 280 && rect.y < hBoxP_StuID))
+						&& (rect.x > -1 && rect.x < 48) && (rect.width >11 && rect.width < 26)
+						&& (rect.height >=10 && rect.height < 26)) {
 					rectTree.add(rect);
 
 				}
 			}
 		}
-//		System.err.println(getSquareXMin(rectTree));
+		System.err.println(getSquareXMin(rectTree));
 		return getSquareXMin(rectTree);
 	}
 
@@ -86,19 +86,19 @@ public class Plantain_StudentID {
 	public String getCodeID() {
 		List<MatOfPoint> contours = MatProcess
 				.getContour(imgPlan_StuID(MatProcess.threshold(matPathImg, wBoxPlan_StuID, hBoxP_StuID)));
-
+//		Imgcodecs.imwrite("src/img/crop.jpg", imgPlan_StuID(MatProcess.threshold(matPathImg, wBoxPlan_StuID, hBoxP_StuID)));
 		Set<Rect> rectTree = new TreeSet<Rect>(SortPlantainY.SORT_PLANTAIN);
 		for (int i = 0; i < contours.size(); i++) {
 			Rect rect = Imgproc.boundingRect(contours.get(i));
-//			System.out.println(rect);
+			System.out.println(rect);
 			if (rect.area() > 85 && rect.area() < 750) {
-				if ((rect.y > -1 && rect.y < hPlan_StuID) && (rect.x > 0 && rect.x < wPlan_StuID)
-						&& (rect.width >= 8 && rect.width < 28) && (rect.height > 7 && rect.height < 28)) {
+				if ((rect.y > -1 && rect.y < hPlan_StuID) && (rect.x >0 && rect.x < wPlan_StuID)
+						&& (rect.width >= 8 && rect.width < 29) && (rect.height > 7 && rect.height < 29)) {
 					rectTree.add(rect);
 				}
 			}
 		}
-//		System.err.println(rectTree);
+		System.err.println(rectTree);
 		String res = "";
 		for (Rect rect : rectTree) {
 			res += getnumberRow(rect, rectTree.size());
