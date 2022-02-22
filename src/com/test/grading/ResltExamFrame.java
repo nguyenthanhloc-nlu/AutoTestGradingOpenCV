@@ -6,7 +6,7 @@ import org.opencv.core.Rect;
 public class ResltExamFrame {
 
 	public static final double X_DAP_AN_PERCENT = 0.1;
-	public static final double Y_DAP_AN_PERCENT = 0.461; // 0,461
+	public static final double Y_DAP_AN_PERCENT = 0.451; // 0,461
 
 	public Mat getAnswerFrame(Mat src) {
 		int x = (int) (X_DAP_AN_PERCENT * src.cols());
