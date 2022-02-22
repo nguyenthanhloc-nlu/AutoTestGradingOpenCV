@@ -13,7 +13,7 @@ public class GetFrame {
 	IdExamFrame getIdExamFrame = new IdExamFrame();
 	IdStudentFrame getIdStudentFrame = new IdStudentFrame();
 	ResltExamFrame getResltExamFrame = new ResltExamFrame();
-	GetAnswers getAnswers = new GetAnswers();
+//	GetAnswers getAnswers = new GetAnswers();
 
 	public void execute(Mat src, Mat idExam, Mat idStudent, Mat resultExam) {
 
@@ -29,6 +29,7 @@ public class GetFrame {
 
 		Mat frameRomatedAfterCrop = paper.getFrameRomatedAfterCrop(getPositionPaperAfterRomomate,
 				getFrameRomatedBeforeCrop);
+
 		Imgcodecs.imwrite("src/img/frameRomatedAfterCrop.jpg", frameRomatedAfterCrop);
 
 		getResltExamFrame.getAnswerFrame(frameRomatedAfterCrop).copyTo(resultExam);
