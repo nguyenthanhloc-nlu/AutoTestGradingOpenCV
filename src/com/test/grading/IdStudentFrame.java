@@ -20,5 +20,6 @@ public class IdStudentFrame {
 		Imgcodecs.imwrite("src/img/mssv-b1-res.jpg", getStubAnswerFrame);
 		return getStubAnswerFrame;
 	}
+	
 
 }
