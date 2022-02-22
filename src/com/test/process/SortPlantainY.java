@@ -8,7 +8,7 @@ public class SortPlantainY {
 
 		@Override
 		public int compare(Rect o1, Rect o2) {
-			if (Math.abs(o1.x - o2.x) <= 18) // cùng 1 cột loại bỏ
+			if (Math.abs(o1.x - o2.x) <= 13) // cùng 1 cột loại bỏ
 				return 0;
 			else
 				return Integer.compare(o1.x, o2.x); // khác cột sắp xếp theo x
@@ -26,5 +26,8 @@ public class SortPlantainY {
 		}
 
 	};
+
+}
+
 
 }
