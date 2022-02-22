@@ -17,4 +17,5 @@ public class ResltExamFrame {
 		Mat res = new Mat(src, new Rect(x, y, w, h));
 		return res;
 	}
+	
 }
