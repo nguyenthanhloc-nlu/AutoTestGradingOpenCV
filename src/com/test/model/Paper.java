@@ -55,7 +55,7 @@ public class Paper {
 
 			rects.clear();
 			Mat thresh_image = MatProcess.toThreshBinary(gray, thresh_);
-//			Imgcodecs.imwrite("src/img/getPositionPaper-thresh_image.jpg", thresh_image);
+			Imgcodecs.imwrite("src/img/getPositionPaper-thresh_image.jpg", thresh_image);
 			List<MatOfPoint> contours = MatProcess.getContour(thresh_image);
 
 			for (int i = 0; i < contours.size(); i++) {
@@ -81,8 +81,6 @@ public class Paper {
 
 		List<Rect> result = new ArrayList<Rect>();
 
-//		Mat newSize = new Mat();
-//		Imgproc.resize(src, newSize, new Size(src.width() / 2, src.height() / 2));
 		totalArea = src.width() * src.height();
 
 		Mat gray = MatProcess.toColorGray(src);
@@ -94,19 +92,19 @@ public class Paper {
 //		System.out.println("positionThreshValue.getThreshValue(): " + theshIss);
 
 		Mat thresh_image = MatProcess.toThreshBinary(gray, theshIss);
-//		Imgcodecs.imwrite("src/img/getPositionPaperAfterRomomate-thresh_image.jpg", thresh_image);
+		Imgcodecs.imwrite("src/img/getPositionPaperAfterRomomate-thresh_image.jpg", thresh_image);
 		List<MatOfPoint> contours = MatProcess.getContour(thresh_image);
 
 		for (int i = 0; i < contours.size(); i++) {
 			Rect rect = Imgproc.boundingRect(contours.get(i));
 
-			if ((rect.width > 18 || rect.width < 35) && (rect.height > 18 || rect.height < 35)
-					&& rect.area() > (18 * 18) && rect.area() < (35 * 35) && Math.abs(rect.width - rect.height) < 5) {
+			if ((rect.width > 16 || rect.width < 35) && (rect.height > 16 || rect.height < 35)
+					&& rect.area() > (16 * 16) && rect.area() < (35 * 35) && Math.abs(rect.width - rect.height) < 5) {
 				rects.add(rect);
 			}
 		}
 		result = filterForId_Exam(rects);
-//		System.out.println("getPositionPaperAfterRomomate " + result);
+		System.out.println("getPositionPaperAfterRomomate " + result);
 		return result;
 	}
 
@@ -195,7 +193,7 @@ public class Paper {
 		Mat m = new Mat();
 		Imgproc.resize(src, m, new Size(src.width() / 2, src.height() / 2));
 
-//		Imgcodecs.imwrite("src/img/getFrameRomatedBeforeCrop-resize.jpg", m);
+		Imgcodecs.imwrite("src/img/getFrameRomatedBeforeCrop-resize.jpg", m);
 
 		totalArea = src.width() / 2 * src.height() / 2;
 
@@ -203,7 +201,7 @@ public class Paper {
 			Imgproc.rectangle(m, listRect.get(i), new Scalar(0, 255, 0));
 		}
 
-//		System.out.println("getFrameRomatedBeforeCrop listRect: " + listRect);
+		System.out.println("getFrameRomatedBeforeCrop listRect: " + listRect);
 
 		double angle = MatProcess.computeAngleRotate(new Point(listRect.get(0).x, listRect.get(0).y),
 				new Point(listRect.get(1).x, listRect.get(1).y), new Point(listRect.get(2).x, listRect.get(2).y));
@@ -216,9 +214,9 @@ public class Paper {
 	public Mat getFrameRomatedAfterCrop(List<Rect> listRect, Mat src) {
 
 		Mat m = new Mat();
-		Imgproc.resize(src, m, new Size(src.width() / 2, src.height() / 2));
+		Imgproc.resize(src, m, new Size(src.width(), src.height()));
 
-		totalArea = src.width() / 2 * src.height() / 2;
+		totalArea = src.width() * src.height();
 
 		int xTopLeft = listRect.get(0).x;
 		int yTopLeft = listRect.get(0).y;
@@ -230,17 +228,12 @@ public class Paper {
 		int wAfterRomate = (int) ((xTopRight - xTopLeft));
 		int hAfterRomate = (int) ((yBottomLeft - yTopLeft));
 
-//		Imgcodecs.imwrite("src/img/getFrameRomatedAfterCrop-mmm.jpg", m);
+		Imgcodecs.imwrite("src/img/getFrameRomatedAfterCrop-mmm.jpg", m);
 
-//		System.out.println("xTopLeft: " + xTopLeft);
-//		System.out.println("yTopLeft: " + yTopLeft);
-//		System.out.println("wAfterRomate: " + wAfterRomate);
-//		System.out.println("hAfterRomate: " + hAfterRomate);
+		Mat drop_Mat = new Mat(m, new Rect((xTopLeft), (yTopLeft) - 5, wAfterRomate, (hAfterRomate) + 25));
 
-		Mat drop_Mat = new Mat(m, new Rect(xTopLeft / 2, yTopLeft / 2, wAfterRomate / 2, (hAfterRomate / 2) + 20));
-
-//		Imgcodecs.imwrite("src/img/paper-getFrameRomatedAfterCrop-drop-matbefore-.jpg", m);
-//		Imgcodecs.imwrite("src/img/paper-getFrameRomatedAfterCrop-drop-mat.jpg", drop_Mat);
+		Imgcodecs.imwrite("src/img/paper-getFrameRomatedAfterCrop-drop-matbefore-.jpg", m);
+		Imgcodecs.imwrite("src/img/paper-getFrameRomatedAfterCrop-drop-mat.jpg", drop_Mat);
 
 		return drop_Mat;
 	}
@@ -344,7 +337,6 @@ public class Paper {
 					rects.add(rect);
 			}
 		}
-//		List<Rect> rs = filterRects(rects);
 		List<Rect> rs = filterForId_Exam(rects);
 		for (int i = 0; i < rs.size(); i++) {
 			Imgproc.rectangle(m, rs.get(i), new Scalar(0, 255, 0));
@@ -360,7 +352,6 @@ public class Paper {
 		Point p2 = new Point(d[1].x, d[1].y);
 		Point p3 = new Point(d[2].x, d[2].y);
 		double angle = MatProcess.computeAngleRotate(p1, p2, p3);
-//		System.out.println("Gốc xoay: " + angle);
 		Mat imgRomated = MatProcess.rotate(m, angle);
 
 		rectInFourRect = new Mat(imgRomated, new Rect(d[0].x, d[0].y, width, height));
@@ -371,109 +362,4 @@ public class Paper {
 		return rectInFourRect;
 
 	}
-
-//	public static List<Rect> filterRects(Set<Rect> rects) {
-//
-//		System.out.println("Paper: " + "filterForId");
-//
-//		List<Rect> data = rects.stream().collect(Collectors.toList());
-//		Set<Rect> test = new TreeSet<Rect>(RectCompareNoise.RECT_COMPARE);
-//		Set<Rect> test2 = new TreeSet<Rect>(RectCompareNoise.RECT_COMPARE);
-//		List<Rect> rs = new ArrayList<Rect>();
-//
-//		for (int i = 0; i < data.size(); i++) {
-//			test.add(data.get(i));
-//			for (int j = i + 1; j < data.size(); j++) {
-//				if ((data.get(i).x == data.get(j).x || Math.abs(data.get(i).x - data.get(j).x) < data.get(i).width * 2)
-//						&& Math.abs(data.get(i).y - data.get(j).y) > 700) {
-//					test.add(data.get(j));
-//				}
-//			}
-//		}
-//
-//		rs = test.stream().collect(Collectors.toList());
-////		List<Rect> rs2 = new ArrayList<Rect>();
-//		double minCheo = Double.MAX_VALUE;
-//		if (rs.size() > 4) {
-//			for (int i = 0; i < rs.size(); i++) {
-//				for (int j = i + 1; j < rs.size(); j++) {
-//					for (int k = j + 1; k < rs.size(); k++) {
-//						for (int l = k + 1; l < rs.size(); l++) {
-//							// lấy ô min
-//							// lấy ô max
-//							// ô lơn hơn ô min là ô trên bên phải
-//							// ô còn lại góc dưới trái
-//							int square1 = rs.get(i).x + rs.get(i).y;
-//							int square2 = rs.get(j).x + rs.get(j).y;
-//							int square3 = rs.get(k).x + rs.get(k).y;
-//							int square4 = rs.get(l).x + rs.get(l).y;
-//
-//							int min = Math.min(square1, Math.min(square2, Math.min(square3, square4)));
-//							int max = Math.max(square1, Math.max(square2, Math.max(square3, square4)));
-//
-//							List<Rect> frontier = new ArrayList<Rect>();
-//							frontier.add(rs.get(i));
-//							frontier.add(rs.get(j));
-//							frontier.add(rs.get(k));
-//							frontier.add(rs.get(l));
-//							Rect topLeft = null, topRight, bottomLeft = null, bottomRight = null;
-//							for (int m = 0; m < frontier.size(); m++) {
-//								if (frontier.get(m).x + frontier.get(m).y == min)
-//									topLeft = frontier.get(m);
-//								if (frontier.get(m).x + frontier.get(m).y == max)
-//									bottomRight = frontier.get(m);
-//							}
-//							frontier.remove(topLeft);
-//							frontier.remove(bottomRight);
-//							int yMax = 0;
-//							for (int m = 0; m < frontier.size(); m++) {
-//								if (frontier.get(m).y > yMax) {
-//									bottomLeft = frontier.get(m);
-//									yMax = frontier.get(m).y;
-//								}
-//							}
-//							frontier.remove(bottomLeft);
-//
-//							if (frontier.get(0).x > topLeft.x && frontier.get(0).y < bottomRight.y) {
-//								topRight = frontier.get(0);
-//							} else {
-//								continue;
-//							}
-//
-//							double cheo1 = Math.sqrt(
-//									Math.pow(topRight.x - bottomLeft.x, 2) + Math.pow(topRight.y - bottomLeft.y, 2));
-//							double cheo2 = Math.sqrt(
-//									Math.pow(bottomRight.x - topLeft.x, 2) + Math.pow(bottomRight.y - topLeft.y, 2));
-//
-//							if (Math.abs(Math.abs(cheo1 - cheo2)) < 1000
-//									&& Math.abs(topLeft.x - bottomLeft.x) < topLeft.width * 2
-//									&& Math.abs(topLeft.y - topRight.y) < topLeft.height * 2
-//									&& Math.abs(bottomRight.x - topRight.x) < bottomRight.width * 2
-//									&& Math.abs(bottomRight.y - bottomLeft.y) < bottomLeft.height * 2) {
-//
-//								// hiệu 2 đường chéo nhỏ nhất, diện tích phần được chọn lớn hơn 50% diện tích
-//								// ảnh
-//								double area = Math.abs(topRight.x - bottomLeft.x) * Math.abs(topRight.y - bottomLeft.y);
-//								if (Math.abs(cheo1 - cheo2) < minCheo && area > totalArea / 3) {
-//									minCheo = Math.abs(cheo1 - cheo2);
-//									System.out.println(cheo1);
-//									System.out.println(cheo2);
-//									test2.clear();
-//									test2.add(rs.get(i));
-//									test2.add(rs.get(j));
-//									test2.add(rs.get(k));
-//									test2.add(rs.get(l));
-//								}
-//							}
-//						}
-//					}
-//				}
-//			}
-//
-//			System.out.println(test2.stream().collect(Collectors.toList()));
-//			return test2.stream().collect(Collectors.toList());
-//		}
-//		return rs;
-//	}
-
 }
