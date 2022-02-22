@@ -40,7 +40,7 @@ public class GetAnswers {
 	public static final int SPACE_ANSWER = 18;
 
 	public static final int UPPER_BOUND_Y = 700; // tren 700
-	public static final int LOWER_BOUND_Y = 70;// duoi 70
+	public static final int LOWER_BOUND_Y = 80;// duoi 80
 
 	public static final int UPPER_BOUND_X = 600;
 	public static final int LOWER_BOUND_X = 0;
@@ -164,11 +164,12 @@ public class GetAnswers {
 									
 									
 									if(Math.abs(width1 - width3) < 20 && //60
-											Math.abs(width3) >150 && //60
 											Math.abs(width4 - width2) < 20 && //60
 											Math.abs(height2 - height1) < 20 &&
 											Math.abs(height3 - height1) < 20 &&
 											Math.abs(height3 - height2) < 20 &&
+											Math.abs(width3) >150 &&
+											Math.abs(height1) >500 &&
 											Math.abs(bottomLeft.x - topLeft.x) < 40 &&
 											Math.abs(bottomCentral.x - topCentral.x) < 40 && //60
 											Math.abs(bottomRight.x - topRight.x) < 40 &&
@@ -292,7 +293,7 @@ public class GetAnswers {
 			result.clear();
 			Mat gray = MatProcess.toColorGray(colAnswer);
 			Mat thresh = new Mat();
-			thresh = MatProcess.toThreshBinary(gray,this.thresh-5);
+			thresh = MatProcess.toThreshBinary(gray,this.thresh-10);
 	
 			List<MatOfPoint> contours = MatProcess.getContour(thresh);
 			System.out.println(contours.size() +"size");
