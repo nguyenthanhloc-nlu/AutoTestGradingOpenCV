@@ -74,6 +74,17 @@ public class MatProcess {
 		Imgproc.warpAffine(src, dst, rotate, new Size(width, height));
 		return dst;
 	}
+	
+	public static Mat rotate(Mat src, double angle, int x, int y) {
+
+//		System.out.println("MatProcess: rotate");
+		int width = src.width();
+		int height = src.height();
+		Mat rotate = Imgproc.getRotationMatrix2D(new Point(x, y), angle, 1);
+		Mat dst = new Mat();
+		Imgproc.warpAffine(src, dst, rotate, new Size(width, height));
+		return dst;
+	}
 
 	public static double computeAngleRotate(Point p1, Point p2, Point p3) {
 
@@ -88,9 +99,9 @@ public class MatProcess {
 		double cosa = a / (b * c);
 		double angle = Math.acos(cosa);
 		if (p1.x - p2.x > 0)
-			return Math.toDegrees(angle) / 2;
-		return -Math.toDegrees(angle) / 2;
+			return Math.toDegrees(angle)/2;
 
+		return -Math.toDegrees(angle)/2;
 	}
 
 	public static double computeAngleRotate(Point p1, Point p2, int ix, int iY) {
@@ -108,9 +119,9 @@ public class MatProcess {
 		}
 
 		if (p1.x - p2.x > 0)
-			return Math.toDegrees(angle);
+			return Math.toDegrees(angle)/2;
 
-		return -Math.toDegrees(angle);
+		return -Math.toDegrees(angle)/2;
 	}
 
 	public static Point pointAfterRotate(Point oldPoint, double angle, Point central) {
@@ -125,19 +136,12 @@ public class MatProcess {
 	}
 
 	public static Mat reSize(Mat mat, int w, int h) {
-
-//		System.out.println("MatProcess: reSize");
-
 		Mat destMat = new Mat();
 		Imgproc.resize(mat, destMat, new Size(w, h), 0, 0, Imgproc.INTER_AREA);
 		return destMat;
 	}
-
 	// images gray
 	public static Mat imgGray(Mat matPathImg) {
-
-//		System.out.println("MatProcess: imgGray");
-
 		Mat dstImg = new Mat();
 		Imgproc.cvtColor(matPathImg, dstImg, Imgproc.COLOR_BGR2GRAY);
 		Mat dstGray = new Mat(dstImg.rows(), dstImg.cols(), dstImg.type());
@@ -146,14 +150,11 @@ public class MatProcess {
 	}
 
 	// threshold resize
-	public static Mat threshold(Mat matPathImg, int wBoxPlan_StuID, int hBoxP_StuID) {
-
-//		System.out.println("MatProcess: threshold");
-
+	public static Mat threshold(Mat matPathImg,int wBoxPlan_StuID,int hBoxP_StuID ) {
 		Mat imgGrayResize = reSize(imgGray(matPathImg), wBoxPlan_StuID, hBoxP_StuID);
 		Mat dstThres = new Mat(imgGrayResize.rows(), imgGrayResize.cols(), imgGrayResize.type(), new Scalar(0));
 		Imgproc.adaptiveThreshold(imgGrayResize, dstThres, 255, Imgproc.ADAPTIVE_THRESH_GAUSSIAN_C,
-				Imgproc.THRESH_BINARY_INV, 31, 11);
+				Imgproc.THRESH_BINARY_INV, 31, 18.5);
 		return dstThres;
 	}
 }
