@@ -32,10 +32,10 @@ public class GetAnswers {
 	public static final int W_SQUARE_MAX = 30;
 	public static final int H_SQUARE_MAX = 30;
 
-	public static final int MARGIN = 21;//21
+	public static final int MARGIN = 17;//21
 
-	public static final int W_ANSWER = 21;
-	public static final int H_ANSWER = 21;
+	public static final int W_ANSWER = 20;
+	public static final int H_ANSWER = 20;
 
 	public static final int SPACE_ANSWER = 18;
 
